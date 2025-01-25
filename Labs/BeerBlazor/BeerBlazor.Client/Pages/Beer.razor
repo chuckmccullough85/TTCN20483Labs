@@ -1,0 +1,52 @@
+﻿@page "/beer"
+@rendermode InteractiveAuto
+
+
+<h3>Beer</h3>
+<div>
+    <InputRadioGroup @bind-Value="selectedSearchType">
+        @foreach (var t in stypes)
+        {
+            <InputRadio Value="@t" />@t
+        }
+    </InputRadioGroup>
+    <InputText @bind-Value="searchText" />
+    <button class="btn btn-primary" @onclick="Go">Search</button>
+</div>
+<div class="container">
+    <div class="row">
+        @foreach (var brew in breweries!)
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>@brew.Name</h3>
+                    <p>@brew.Description</p>
+                    <p>@brew.Address</p>
+                    <p>@brew.City, @brew.State</p>
+                    <p>@brew.Phone</p>
+                    <p>@brew.Website</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    string[] stypes = new string[] { "Name", "City", "State", "Zip" };
+    string selectedSearchType = "Name";
+    string searchText = "";
+    List<BreweryModel>? breweries = new List<BreweryModel>();
+    private async Task Go()
+    {
+        var Http = new HttpClient();
+        var st = Uri.EscapeDataString(searchText.Trim());
+        string url = $"https://api.openbrewerydb.org/v1/breweries?by_{selectedSearchType.ToLower()}={st}";
+        Console.WriteLine(url);
+        var resp = await Http.GetAsync(url);
+        resp.EnsureSuccessStatusCode();
+        breweries = await resp.Content.ReadFromJsonAsync<List<BreweryModel>>();
+        breweries ??= new List<BreweryModel>();
+    }
+
+}

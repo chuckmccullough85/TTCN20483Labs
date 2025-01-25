@@ -1,0 +1,43 @@
+﻿@model BeerModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Beer Web</h1>
+</div>
+
+<form asp-action="Search">
+    <div class="form-group">
+        <label asp-for="SearchBy"></label>
+        @foreach(var item in Enum.GetNames(typeof(SearchBy)))
+        {
+            bool selected = item == Model.SearchBy.ToString();
+            <input type="radio" checked="@selected" asp-for="SearchBy" value="@item" /> @item
+        }
+    </div>  
+    <div class="form-group">
+        <label asp-for="SearchTerm"></label>
+        <input class="form-control" asp-for="SearchTerm" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<div class="container">
+    <div class="row">
+        @foreach (var brew in Model.Breweries)
+        {
+            <div class="row">
+                <div class="col-md-8">
+                    <h3>@brew.Name</h3>
+                    <p>@brew.Description</p>
+                    <p>@brew.Address</p>
+                    <p>@brew.City, @brew.State</p>
+                    <p>@brew.Phone</p>
+                    <p>@brew.Website</p>
+                </div>
+            </div>
+        }
+</div>  
+

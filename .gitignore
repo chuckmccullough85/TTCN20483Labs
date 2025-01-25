@@ -1,0 +1,13 @@
+# Ignore all bin folders
+**/bin/
+# Ignore all obj folders
+**/obj/
+# Ignore vscode settings
+.vscode/
+.vs/
+
+#ignore .bin files
+*.bin
+
+#ignore .db files
+*.db
